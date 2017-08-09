@@ -1,0 +1,35 @@
+Source:Signal%20Properties:DataIOFilter int SourceCh= 68 16 1 % // number of digitized and stored channels
+Source:Signal%20Properties:DataIOFilter int SampleBlockSize= 40 32 1 % // number of samples transmitted at a time
+Source:Signal%20Properties:DataIOFilter int SamplingRate= 1000 256Hz 1 % // sample rate
+Source:Signal%20Properties:DataIOFilter list ChannelNames= 0 // list of channel names
+Source:Signal%20Properties:DataIOFilter floatlist SourceChOffset= 68 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 % % // Offset for channels in A/D units
+Source:Signal%20Properties:DataIOFilter floatlist SourceChGain= 68 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.0298023 0.003 % % // gain for each channel (A/D units -> muV)
+Source:NeuroscanADC string ServerAddress= localhost:3998 // address and port of the Neuroscan Acquire server
+Source:Alignment:AlignmentFilter int AlignChannels= % 0 0 1 // align channels in time (0=no, 1=yes)
+Source:Alignment:AlignmentFilter floatlist SourceChTimeOffset= 0 0 % % // time offsets for all source channels (may be empty)
+Source:Online%20Processing:TransmissionFilter list TransmitChList= 10 30 26 17 21 27 36 25 29 40 31 // list of transmitted channels
+Filtering:SpatialFilter int SpatialFilterType= 1 2 0 3 // spatial filter type 0: none, 1: full matrix, 2: sparse matrix, 3: common average reference (CAR) (enumeration)
+Filtering:SpatialFilter:SpatialFilter matrix SpatialFilter= { C4 C3 } 10 1 0 0 -.25 0 0 0 -.25 -.25 -.25 0 1 -.25 0 -.25 -.25 -.25 0 0 0 0 % % // columns represent input channels, rows represent output channels
+Filtering:SpatialFilter:SpatialFilter intlist SpatialFilterCAROutput= 0 // when using CAR filter type: list of output channels, or empty for all channels
+Filtering:SpatialFilter:SpatialFilter int SpatialFilterMissingChannels= 1 0 0 1 // how to handle missing channels 0: ignore, 1: report error (enumeration)
+Filtering:Spectral%20Estimation:ARThread float FirstBinCenter= 0Hz 0Hz % % // Center of first frequency bin (in Hz)
+Filtering:Spectral%20Estimation:ARThread float LastBinCenter= 30Hz 30Hz % % // Center of last frequency bin (in Hz)
+Filtering:Spectral%20Estimation:ARThread float BinWidth= 3Hz 3Hz % % // Width of spectral bins (in Hz)
+Filtering:Spectral%20Estimation:ARThread int OutputType= 0 0 0 2 // 0: Spectral Amplitude, 1: Spectral Power, 2: Coefficients (enumeration)
+Filtering:AR%20Spectral%20Estimator:ARThread int ModelOrder= 16 16 0 % // AR model order
+Filtering:AR%20Spectral%20Estimator:ARThread int EvaluationsPerBin= 15 15 1 % // Number of uniformly spaced evaluation points entering into a single bin value
+Filtering:Windowing:WindowingThread int WindowLength= 160ms 0.5s % % // Length of window
+Filtering:Windowing:WindowingThread int Detrend= 2 0 0 2 // Detrend data? 0: no, 1: mean, 2: linear (enumeration)
+Filtering:Windowing:WindowingThread int WindowFunction= 0 0 0 3 // Window function 0: Rectangular, 1: Hamming, 2: Hann, 3: Blackman (enumeration)
+Filtering:LinearClassifier matrix Classifier= 2 { input%20channel input%20element%20(bin) output%20channel weight } C4 12Hz 1 1 C3 12Hz 1 -1 // Linear classification matrix in sparse representation
+Filtering:LPFilter float LPTimeConstant= 5 16s 0 % // time constant for the low pass filter
+Filtering:ExpressionFilter string StartRunExpression= % // expression executed on StartRun
+Filtering:ExpressionFilter string StopRunExpression= % // expression executed on StopRun
+Filtering:ExpressionFilter matrix Expressions= 0 1 // expressions used to compute the output of the ExpressionFilter (rows are channels; empty matrix for none)
+Filtering:Normalizer floatlist NormalizerOffsets= 1 0 0 % % // normalizer offsets
+Filtering:Normalizer floatlist NormalizerGains= 1 0.05 0 % % // normalizer gain values
+Filtering:Normalizer intlist Adaptation= 1 2 0 0 2 // 0: no adaptation, 1: zero mean, 2: zero mean, unit variance (enumeration)
+Filtering:Normalizer matrix BufferConditions= 2 1 (Feedback)&&(TargetCode==1) (Feedback)&&(TargetCode==2) // expressions corresponding to data buffers (columns correspond to output channels, multiple rows correspond to multiple buffers)
+Filtering:Normalizer float BufferLength= 30s 9s % % // time window of past data per buffer that enters into statistic
+Filtering:Normalizer string UpdateTrigger= (Feedback==0) // expression to trigger offset/gain update when changing from 0 (use empty string for continuous update)
+Connector:ConnectorOutput string ConnectorOutputAddress= localhost:55404 localhost:20321 % % // one or more IP:Port combinations, e.g. localhost:20321
